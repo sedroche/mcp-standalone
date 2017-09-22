@@ -9,6 +9,7 @@
  */
 angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
   '$scope',
+  '$rootScope',
   '$routeParams',
   '$location',
   'DataService',
@@ -17,6 +18,7 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
   'AuthorizationService',
   function(
     $scope,
+    $rootScope,
     $routeParams,
     $location,
     DataService,
@@ -51,10 +53,14 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
             {
               label: 'Create Mobile App',
               primary: true,
-              action: $location.path.bind(
-                $location,
-                `project/${projectContext.projectName}/create-mobileapp`
-              ),
+              modal: true,
+              contentUrl: 'extensions/mcp/views/create-mobileapp.html',
+              action: function() {
+                mcpApi.mobileApps().then(apps => {
+                  $scope.overviews.apps.objects = apps;
+                  $rootScope.$emit('controlPanelAppModal:hide');
+                });
+              },
               canView: function() {
                 return true;
               }
@@ -68,10 +74,14 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
           actions: [
             {
               label: 'Add External Service',
-              action: $location.path.bind(
-                $location,
-                `project/${projectContext.projectName}/create-mobileservice`
-              ),
+              modal: true,
+              contentUrl: 'extensions/mcp/views/create-service.html',
+              action: function() {
+                mcpApi.mobileServices().then(services => {
+                  $scope.overviews.services.objects = apps;
+                  $rootScope.$emit('controlPanelAppModal:hide');
+                });
+              },
               canView: function() {
                 return AuthorizationService.canI(
                   'services',

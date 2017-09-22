@@ -16,9 +16,14 @@ angular.module('mobileControlPanelApp').component('overview', {
                   </a>
                 </span>
                 <div class="pull-right">
-                  <a ng-repeat="action in $ctrl.model.actions" ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
-                    {{action.label}}
-                  </a>
+                  <div ng-repeat="action in $ctrl.model.actions">
+                    <a ng-if="!action.modal" ng-repeat="action in $ctrl.model.actions" ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
+                      {{action.label}}
+                    </a>
+                    <modal ng-if="action.modal" launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
+                      <create-app created=action.action></create-app>
+                    </modal>
+                  </div>
                 </div>
               </div>
 
@@ -43,9 +48,12 @@ angular.module('mobileControlPanelApp').component('overview', {
                 Learn more about {{$ctrl.model.title}} <a href="http://feedhenry.org/docs/">in the documentation</a>.
               </p>
               <div ng-repeat="action in $ctrl.model.actions | orderBy: 'primary'" class="blank-slate-pf-main-action">
-                <a ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
+                <a ng-if="!action.modal" ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
                     {{action.label}}
-                  </a>
+                </a>
+                <modal ng-if="action.modal" launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
+                  <create-service created=action.action></create-service>
+                </modal>  
               </div>
             </div>`,
   bindings: {

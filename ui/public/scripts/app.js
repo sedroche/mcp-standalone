@@ -75,11 +75,6 @@ angular.module('mobileControlPanelApp', ['openshiftConsole']).config([
   '$routeProvider',
   function($routeProvider) {
     $routeProvider
-      .when('/project/:project/create-mobileapp', {
-        templateUrl: 'extensions/mcp/views/create-mobileapp.html',
-        controller: 'CreateMobileappController',
-        resolve: resolveMCPRoute
-      })
       .when('/project/:project/create-mobileservice', {
         templateUrl: 'extensions/mcp/views/create-service.html',
         controller: 'CreateMobileServiceController',
