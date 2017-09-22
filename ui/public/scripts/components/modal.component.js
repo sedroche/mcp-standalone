@@ -2,38 +2,10 @@
 
 /**
  * @ngdoc component
- * @name mcp.component:modal
+ * @name mcp.directive:modal
  * @description
  * # modal
  */
-// angular.module('mobileControlPanelApp').directive('modal', {
-//   template: `<button class="btn btn-default" data-toggle="modal" data-target="#myModal">{{$ctrl.launch}}</button>
-//               <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-//                 <div class="modal-dialog">
-//                   <div class="modal-content">
-//                     <div class="modal-header">
-//                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-//                         <span class="pficon pficon-close"></span>
-//                       </button>
-//                       <h4 class="modal-title" id="myModalLabel">{{$ctrl.modalTitle}}</h4>
-//                     </div>
-//                     <div class="modal-body">
-//                       <div ng-include="$ctrl.contentUrl"></div>
-//                     </div>
-//                     <div class="modal-footer">
-//                       <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-//                       <button type="button" class="btn btn-primary">Create</button>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>`,
-//   bindings: {
-//     modalTitle: '<',
-//     launch: '<',
-//     contentUrl: '<'
-//   },
-//   controller: ['$scope', function($scope) {}]
-// });
 angular.module('mobileControlPanelApp').directive('modal', function() {
   return {
     template: `<div class="controlPanelAppModal">
@@ -42,7 +14,7 @@ angular.module('mobileControlPanelApp').directive('modal', function() {
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <button type="button" class="close icon" aria-hidden="true">
                           <span class="pficon pficon-close"></span>
                         </button>
                         <h4 class="modal-title">{{modalTitle}}</h4>
@@ -59,48 +31,65 @@ angular.module('mobileControlPanelApp').directive('modal', function() {
                 </div>
               </div>`,
     scope: {
-      displayControls: '=',
-      launch: '=',
-      modalTitle: '=',
-      cancel: '&',
+      displayControls: '=?',
+      modalOpen: '=?',
+      launch: '=?',
+      modalTitle: '=?',
+      cancel: '&?',
       ok: '&'
     },
     transclude: true,
-    controller: function($scope, $rootScope) {
-      $rootScope.$on('controlPanelAppModal:hide', function() {
-        $scope.modal && $scope.modal.modal('hide');
-      });
-    },
     link: function(scope, element, attrs, controller, transcludeFn) {
-      console.log(scope);
       const launchButton = $('.btn.btn-primary.launch', element);
       const okButton = $('.btn.btn-primary.ok', element);
       const cancelButton = $('.btn.btn-primary.cancel', element);
+      const closeIcon = $('.close.icon', element);
+
       scope.modal = $('.modal.container', element).modal({
         show: false,
         keyboard: true
       });
 
       launchButton.on('click', event => {
-        scope.modal.modal('show');
+        scope.modalOpen = true;
+        scope.$apply(function() {});
       });
 
       okButton.on('click', event => {
         scope.ok && scope.ok()();
-        scope.modal.modal('hide');
+        scope.modalOpen = false;
+        scope.$apply(function() {});
       });
 
       cancelButton.on('click', event => {
-        scope.scope.cancel && scope.cancel()();
-        modal.modal('hide');
+        scope.cancel && scope.cancel()();
+        scope.modalOpen = false;
+        scope.$apply(function() {});
+      });
+
+      closeIcon.on('click', event => {
+        scope.cancel && scope.cancel()();
+        scope.modalOpen = false;
+        scope.$apply(function() {});
+      });
+
+      scope.modal.on('hidden.bs.modal', function(e) {
+        if (!scope.modalOpen) {
+          return;
+        }
+
+        scope.modalOpen = false;
+        scope.$apply(function() {});
+      });
+
+      scope.modalOpen = scope.modalOpen || false;
+      scope.$watch('modalOpen', value => {
+        if (value) {
+          scope.modal.modal('show');
+        } else {
+          scope.modal.modal('hide');
+        }
       });
     }
   };
 });
-
-//TODO
-// return {
-//   templateUrl: function(elem, attr) {
-//     return 'customer-' + attr.type + '.html';
-//   }
-// };

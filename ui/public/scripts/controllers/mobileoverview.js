@@ -9,7 +9,6 @@
  */
 angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
   '$scope',
-  '$rootScope',
   '$routeParams',
   '$location',
   'DataService',
@@ -18,7 +17,6 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
   'AuthorizationService',
   function(
     $scope,
-    $rootScope,
     $routeParams,
     $location,
     DataService,
@@ -47,6 +45,7 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
 
         $scope.overviews.apps = {
           title: 'Mobile Apps',
+          modalOpen: false,
           text:
             'You can create a Mobile App to enable Mobile Integrations with Mobile Enabled Services',
           actions: [
@@ -54,11 +53,12 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
               label: 'Create Mobile App',
               primary: true,
               modal: true,
+              modalOpen: false,
               contentUrl: 'extensions/mcp/views/create-mobileapp.html',
               action: function() {
                 mcpApi.mobileApps().then(apps => {
                   $scope.overviews.apps.objects = apps;
-                  $rootScope.$emit('controlPanelAppModal:hide');
+                  $scope.overviews.apps.modalOpen = false;
                 });
               },
               canView: function() {
@@ -69,6 +69,7 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
         };
         $scope.overviews.services = {
           title: 'Mobile Enabled Services',
+          modalOpen: false,
           text:
             'You can provision or link a Mobile Enabled Service to enable a Mobile App Integration.',
           actions: [
@@ -79,7 +80,7 @@ angular.module('mobileControlPanelApp').controller('MobileOverviewController', [
               action: function() {
                 mcpApi.mobileServices().then(services => {
                   $scope.overviews.services.objects = apps;
-                  $rootScope.$emit('controlPanelAppModal:hide');
+                  $scope.overviews.services.modalOpen = false;
                 });
               },
               canView: function() {

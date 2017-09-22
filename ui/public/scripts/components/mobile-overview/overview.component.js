@@ -20,8 +20,8 @@ angular.module('mobileControlPanelApp').component('overview', {
                     <a ng-if="!action.modal" ng-repeat="action in $ctrl.model.actions" ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
                       {{action.label}}
                     </a>
-                    <modal ng-if="action.modal" launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
-                      <create-app created=action.action></create-app>
+                    <modal ng-if="action.modal" modal-open=$ctrl.model.modalOpen launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
+                      <div ng-include=action.contentUrl></div>
                     </modal>
                   </div>
                 </div>
@@ -51,8 +51,8 @@ angular.module('mobileControlPanelApp').component('overview', {
                 <a ng-if="!action.modal" ng-class="['btn', {'btn-default': !action.primary, 'btn-primary': action.primary}]" ng-click="action.action()" ng-if="action.canView()">
                     {{action.label}}
                 </a>
-                <modal ng-if="action.modal" launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
-                  <create-service created=action.action></create-service>
+                <modal ng-if="action.modal" modal-open=$ctrl.model.modalOpen launch=action.label modal-title=action.label display-controls=false ng-if="action.canView()">
+                  <div ng-include=action.contentUrl></div>
                 </modal>  
               </div>
             </div>`,

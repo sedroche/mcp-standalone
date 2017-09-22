@@ -70,14 +70,14 @@ angular.module('mobileControlPanelApp').component('createApp', {
 
       $scope.app = { clientType: '' };
       $scope.createApp = function() {
-        mcpApi
-          .createMobileApp($scope.app)
-          .then(app => {
-            $scope.$ctrl.created()($scope.app);
-          })
-          .catch(err => {
-            console.error('failed to create app ', err);
-          });
+        // mcpApi
+        //   .createMobileApp($scope.app)
+        //   .then(app => {
+        $scope.$ctrl.created()($scope.app);
+        // })
+        // .catch(err => {
+        //   console.error('failed to create app ', err);
+        // });
       };
     }
   ]
